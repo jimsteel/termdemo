@@ -60,21 +60,17 @@ export default {
   },
   methods: {
     findBodyPart: function(input) {
-      var url = fhir + '/ValueSet/$expand?url=http://jim/vs&count=10&filter=' + input
-      
+      var url = fhir + '/ValueSet/$expand?url=http://jim/vs&count=10&filter=' + input      
       return new Promise(resolve => {
         if (input.length < 1) {
           return resolve([])
         }
-
         fetch(url)
           .then(response => response.json())
           .then(data => {
             resolve(data.expansion.contains)
           })
       })
-//       alert('expand on ' + url)
-//       this.bodyPart = { system: 'http://jim', code: '987' }
     },
     
     getResultValue(result) {
@@ -116,13 +112,11 @@ export default {
     
     findCondition: function(input) {
       var findConditionUrl = fhir + '/ValueSet/$expand?url=http://snomed.info/sct?fhir_vs=ecl/<<404684003:363698007='
-          + this.sctBodyPartCode + '&count=10&filter=' + input
-      
+          + this.sctBodyPartCode + '&count=10&filter=' + input      
       return new Promise(resolve => {
         if (input.length < 1) {
           return resolve([])
         }
-
         fetch(findConditionUrl)
           .then(response => response.json())
           .then(data => {
