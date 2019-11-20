@@ -12,12 +12,12 @@
     <p>Selected body part: {{bodyPartCode}}</p>
     <hr/>
     <p>2. Next we will do a lookup to retrieve the details of the code:
-    <button v-on:click="lookup">Lookup</button>
+    <button v-on:click="lookup" :disabled="!bodyPartCode">Lookup</button>
     </p>
     <p>Lookup result: {{detailedBodyPart}}</p>
     <hr/>
     <p>3. Next we will do a translate of the code to map it to SNOMED-CT:
-    <button v-on:click="translate">Translate</button>
+    <button v-on:click="translate" :disabled="!bodyPartCode">Translate</button>
     </p>
     <p>Result: {{sctBodyPartCode}}</p>
     <hr/>
@@ -27,13 +27,14 @@
       placeholder="Search For Conditions"
       aria-label="Search For Conditions"
       :get-result-value="getResultValue"
-      @submit="handleSubmitCondition" />
+      @submit="handleSubmitCondition"
+      :disabled="!sctBodyPartCode"/>
     </p>
     <p>Result: {{sctConditionCode}}</p>
     <hr/>
-    <p>5. Then we can try to search a FHIR repository for patients with this condition, or any of its descendent conditions:
-    FHIR server for clinical data:
-    <button v-on:click="findPatients">Find patients</button>
+    <p>5. Then we can try to search a FHIR repository for Condition resources with this code, or any of its descendents:
+    Conditions:
+    <button v-on:click="findConditions" :disabled="!sctConditionCode">Find conditions</button>
     <p>
     Results: {{conditions}}
     </p>
@@ -83,7 +84,7 @@ export default {
 
     lookup: function() {
       var url = fhir
-            + '/CodeSystem/$lookup?system=http://jim&property=*'
+            + '/CodeSystem/$lookup?system=http://jim&property=lateralizable&property=category'
             + '&code=' + this.bodyPartCode
       new Promise(resolve => {
         fetch(url)
@@ -129,10 +130,8 @@ export default {
       this.sctConditionCode = result.code;
     },
 
-    findPatients: function() {
+    findConditions: function() {
           var url = fhir + '/Condition?code:below=http://snomed.info/sct|' + this.sctConditionCode
-//       alert('find patients: ' + url)
-//       this.conditions = { resourceType: 'Bundle', type: 'search-results', entry: [] }
       new Promise(resolve => {
         fetch(url)
           .then(response => response.json())
