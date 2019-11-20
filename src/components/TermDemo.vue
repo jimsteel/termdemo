@@ -87,7 +87,7 @@ export default {
 
     lookup: function() {
       var url = fhir
-            + '/CodeSystem/$lookup?system=http://jim'
+            + '/CodeSystem/$lookup?system=http://jim&property=*'
             + '&code=' + this.bodyPartCode
       new Promise(resolve => {
         fetch(url)
@@ -137,8 +137,16 @@ export default {
 
     findPatients: function() {
           var url = fhir + '/Condition?code:below=http://snomed.info/sct|' + this.sctConditionCode
-      alert('find patients: ' + url)
-      this.conditions = { resourceType: 'Bundle', type: 'search-results', entry: [] }
+//       alert('find patients: ' + url)
+//       this.conditions = { resourceType: 'Bundle', type: 'search-results', entry: [] }
+      new Promise(resolve => {
+        fetch(url)
+          .then(response => response.json())
+          .then(data => {
+            this.conditions = data
+            resolve(data)
+          })
+      })
     }
   }
 }
