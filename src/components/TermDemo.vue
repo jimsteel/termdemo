@@ -61,7 +61,7 @@ export default {
   },
   methods: {
     findBodyPart: function(input) {
-      var url = fhir + '/ValueSet/$expand?url=http://jim/vs&count=10&filter=' + input      
+      var url = fhir + '' //FIXME    
       return new Promise(resolve => {
         if (input.length < 1) {
           return resolve([])
@@ -69,7 +69,7 @@ export default {
         fetch(url)
           .then(response => response.json())
           .then(data => {
-            resolve(data.expansion.contains)
+            resolve(data) //FIXME
           })
       })
     },
@@ -83,37 +83,31 @@ export default {
     },
 
     lookup: function() {
-      var url = fhir
-            + '/CodeSystem/$lookup?system=http://jim&property=lateralizable&property=category'
-            + '&code=' + this.bodyPartCode
+      var url = fhir + '' //FIXME
       new Promise(resolve => {
         fetch(url)
           .then(response => response.json())
           .then(data => {
-            this.detailedBodyPart = data.parameter
-            resolve(data.parameter)
+            this.detailedBodyPart = data //FIXME
+            resolve(data) //FIXME
           })
       })
     },
     
     translate: function() {
-      var url = fhir
-            + '/ConceptMap/$translate?system=http://jim'
-            + '&code=' + this.bodyPartCode
-            + '&target=http://snomed.info/sct?fhir_vs'
+      var url = fhir + '' //FIXME
       new Promise(resolve => {
         fetch(url)
           .then(response => response.json())
           .then(data => {
-            this.sctBodyPartCode = data.parameter.filter(function(e) { return e.name == "match" })[0].part.filter(function(e) {return e.name=='concept'})[0].valueCoding.code
-            resolve(data.parameter.filter(e => e.name='match'))
+            this.sctBodyPartCode = data //FIXME
+            resolve(data) //FIXME
           })
       })
     },
     
     findCondition: function(input) {
-      var findConditionUrl = fhir + '/ValueSet/$expand?url=http://snomed.info/sct?fhir_vs=ecl/<<404684003:363698007='
-          + this.sctBodyPartCode + '&count=10&filter=' + input      
+      var findConditionUrl = fhir + '' //FIXME    
       return new Promise(resolve => {
         if (input.length < 1) {
           return resolve([])
@@ -121,17 +115,17 @@ export default {
         fetch(findConditionUrl)
           .then(response => response.json())
           .then(data => {
-            resolve(data.expansion.contains)
+            resolve(data) //FIXME
           })
       })
     },
     
     handleSubmitCondition(result) {
-      this.sctConditionCode = result.code;
+      this.sctConditionCode = result; //FIXME
     },
 
     findConditions: function() {
-          var url = fhir + '/Condition?code:below=http://snomed.info/sct|' + this.sctConditionCode
+          var url = fhir + '' //FIXME
       new Promise(resolve => {
         fetch(url)
           .then(response => response.json())
